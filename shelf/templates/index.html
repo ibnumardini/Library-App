@@ -1,0 +1,17 @@
+{% extends 'master.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1 class="display-4">Hello, <strong>{% if user.is_authenticated %}{{ user.username.title }}{% else %}Fulan{% endif %}</strong>!</h1>
+    <p class="lead">This is app for Library Management.</p>
+    <hr class="my-4">
+    <p class="lead">
+        <a class="btn btn-primary" href="/books" role="button">Explore now!</a>
+    </p>
+
+</div>
+
+{% endblock content %}

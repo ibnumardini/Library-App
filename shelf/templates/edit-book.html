@@ -1,0 +1,40 @@
+{% extends 'master.html' %}
+
+{% block title %}Edit Book{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="mb-4 py-2">Edit Book : {{ book.title }}</h1> 
+    </div>
+    <div class="col-md-4">
+        <a href="/books" class="btn btn-primary float-right mt-3">Back to Books</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+        {% for message in messages %}
+
+            {% if message %}
+                <div class="alert {{ message.tags }}" alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+                
+        {% endfor %}
+
+        <form action="{% url 'edit_book' book.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-success mt-2"><i class="far fa-save"></i> Save</button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

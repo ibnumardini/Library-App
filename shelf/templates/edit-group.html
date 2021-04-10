@@ -1,0 +1,43 @@
+{% extends 'master.html' %}
+
+{% block title %}Edit Group{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="mb-4 py-2">Edit Group : {{ group.name }}</h1> 
+    </div>
+    <div class="col-md-4">
+        <a href="/groups" class="btn btn-primary float-right mt-3">Back to Groups</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+        
+        {% for msg in messages %}
+            
+            {% if msg %}
+                <div class="alert {{ msg.tags }}" alert-dismissible fade show" role="alert">
+                    {{ msg }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+                
+        {% endfor %}
+            
+
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-success mt-2"><i class="far fa-save"></i> Save</button>
+        </form>
+    </div>
+</div>
+    
+{% endblock content %}
+    

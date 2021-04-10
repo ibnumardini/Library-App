@@ -1,0 +1,165 @@
+{% extends 'master.html' %}
+
+{% load static %}
+
+{% block title %}Books{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="mb-4 py-2">Books</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-filter"></i> 
+                {% if filter  %} 
+                 {{ filter | title }}
+                {% else %}
+                 Select Filter
+                {% endif %}
+                    
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                {% for group in groups %}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="filter_by_group" value="{{ group.name }}">
+                    <button class="dropdown-item" type="submit">{{ group.name }}</button>
+                </form>
+                {% endfor %}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="filter_by_group" value="reset_filter">
+                    <button class="dropdown-item" type="submit">Reset Filter</button>
+                </form>
+            </div>
+            
+            {% if user.is_staff or user.is_superuser %}
+                <a href="{% url 'export_xls' %}" class="btn btn-success"><i class="fas fa-file-excel"></i> Export .xls</a>
+            {% endif %}
+                
+        </div>
+    </div>
+    <div class="col-md-6">
+        
+        {% if user.is_staff or user.is_superuser %}
+            <a href="/books/add-book" class="btn btn-primary float-right"><strong>+</strong> Add Book</a>
+        {% endif %}
+            
+        <a href="/groups" class="btn btn-secondary float-right mr-2">All Groups</a>
+    </div>
+</div>
+
+{% for msg in messages %}
+    
+    {% if msg %}
+        <div class="alert {{ msg.tags }}" alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+        
+{% endfor %}
+
+<div class="row">
+    {% for book in books %}
+    <div class="col-md-3 mb-3 d-flex align-items-stretch">
+        <div class="card">
+
+            {% if book.thumbnail %}
+                <img class="card-img-top" src="{{ book.thumbnail.url }}" alt="{{ book.title }}">
+            {% else %}
+                <img class="card-img-top" src="{% static 'images/' %}1.jpg" alt="No Image">
+            {% endif %}
+                
+            <div class="card-body">
+                <small class="text-muted">#{{ book.group }}</small>
+                <p class="card-text">{{ book.title }}.</p>
+            </div>
+            <div class="card-footer bg-transparent text-center">
+    
+                {% if user.is_staff or user.is_superuser %}
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#book-delete-{{ book.id }}" "><i class="far fa-trash-alt"></i></button>
+                    <a href="{% url 'edit_book' book.id %}" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></i></a>
+                {% endif %}
+
+                <button class="btn btn-info" data-toggle="modal" data-target="#book-detail-{{ book.id }}" ><i class="fas fa-info-circle"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="book-delete-{{ book.id }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirmation Delete!</h3>
+                </div>
+                <div class="modal-body">
+                    Are you sure to delete <strong>{{ book.title }}</strong> ?
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'delete_book' book.id %}" class="btn btn-danger">Delete Now</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="book-detail-{{ book.id }}">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Book Detail : <strong>{{ book.title }}</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="text-center mb-3">
+                        
+                        {% if book.thumbnail %}
+                            <img src="{{ book.thumbnail.url }}" alt="{{ book.title }}" class="img-thumbnail" width="300px">
+                        {% else %}
+                            <img src="{% static 'images/' %}{{ book.thumbnail }}" alt="{{ book.title }}" class="img-thumbnail" width="300px">
+                        {% endif %}
+                            
+                    </div>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <th>Title</th>
+                            <th>Writer</th>
+                            <th>Publisher</th>
+                            <th>Amount</th>
+                            <th>Group</th>
+                        </thead>
+                        <tbody>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.writer }}</td>
+                            <td>{{ book.publisher }}</td>
+                            <td>{{ book.amount }}</td>
+                            <td>{{ book.group }}</td>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,31 @@
+{% extends 'master_client.html' %}
+
+{% block title %} Signup {% endblock title %}
+
+{% block content %}
+
+    <div class="row" style="margin-top: 17%;">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            {% for msg in messages %}
+                <div class="alert {{ msg.tags }}">{{ msg }}</div>
+            {% endfor %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h2 class="mb-3 text-center"><strong>Library</strong> Signup!</h3>
+                        <hr>
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+
+                            <button class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Signup</button>
+                        </form>
+                </div>
+            </div>
+            <p class="text-center mt-4">Already have account? <a href="{% url 'login' %}">Login</a></p>
+        </div>
+
+        <div class="col-md-3"></div>
+    </div>    
+{% endblock content %}
+    

@@ -1,0 +1,101 @@
+{% extends 'master.html' %}
+
+{% block title %}Groups{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="mb-4 py-2">Groups</h1> 
+    </div>
+    <div class="col-md-6">
+        {% if user.is_staff or user.is_superuser %}
+            <a href="/groups/add-group" class="btn btn-primary float-right mt-3"><strong>+</strong> Add Group</a>
+        {% endif %}
+
+        <a href="/books" class="btn btn-secondary float-right mt-3 mr-2">Books</a>
+    </div>
+</div>
+
+{% for msg in messages %}
+    
+    {% if msg %}
+        <div class="alert {{ msg.tags }}" alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+        
+{% endfor %}
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="list-group">
+            {% for group in groups %}
+                <li class="list-group-item">
+                    {{ group.name }}
+                    <span class="float-right">
+                        {% if user.is_staff or user.is_superuser %}
+                            <button class="btn badge badge-danger" data-toggle="modal" data-target="#delete-group-{{ group.id }}" ><i class="far fa-trash-alt"></i></button>
+                            <a href="{% url 'edit_group' group.id %}" class="badge badge-warning"><i class="fas fa-pencil-alt"></i></a>
+                        {% endif %}
+                        <button class="btn badge badge-info" data-toggle="modal" data-target="#detail-group-{{ group.id }}" ><i class="fas fa-info-circle"></i></button>
+                    </span>
+                </li>
+
+                <div class="modal fade" id="delete-group-{{ group.id }}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Confirmation Delete!</h3>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure to delete <strong>{{ group.name }}</strong>?
+                            </div>
+                            <div class="modal-footer">
+                                <a href="{% url 'delete_group' group.id %}" class="btn btn-danger">Delete Now</a>
+                                <button class="btn btn-secondary" data-dismiss="modal" >Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="detail-group-{{ group.id }}">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Group Detail : {{ group.name }}</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                    </thead>
+                                    <tbody>
+                                        <td>{{ group.name }}</td>
+                                        <td>{{ group.description }}</td>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal" >Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock content %}
+    

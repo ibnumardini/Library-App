@@ -1,0 +1,34 @@
+{% extends 'master_client.html' %}
+
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<meta http-equiv="refresh" content="0; url={% url 'index' %}">
+
+{% else %}
+
+<div class="row" style="margin-top: 21%;">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="mb-3 text-center"><strong>Library</strong> Login!</h3>
+                    <hr>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>
+                    </form>
+                </div>
+            </div>
+            <p class="text-center mt-4">Don't have an account yet? <a href="{% url 'signup' %}">Signup</a></p>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+{% endif %}
+
+{% endblock content %}

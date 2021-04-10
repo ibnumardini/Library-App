@@ -1,0 +1,59 @@
+{% extends 'master.html' %}
+
+{% load static %}
+
+{% block title %}Users{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="mb-2 pt-2">Users</h1>
+    </div>
+</div>
+
+<hr>
+
+<table class="table table-bordered text-center">
+    <thead>
+        <th style="width: 10%;">No</th>
+        <th style="width: 60%;">Username</th>
+        <th style="width: 10%;">Staff</th>
+        <th style="width: 10%;">Superuser</th>
+        <th style="width: 10%;">Action</th>
+    </thead>
+    
+    {% for userList in users %}
+
+        {% if userList.username != user %}
+            <tbody>
+                <td>{{ forloop.counter }}.</td>
+                <td>{{ userList.username }}</td>
+                <td>{{ userList.is_staff }}</td>
+                <td>{{ userList.is_superuser }}</td>
+                <td class="text-center">
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#user-delete-{{ userList.id }}" "><i class="far fa-trash-alt"></i></button>
+                </td>
+            </tbody>
+
+            <div class="modal fade" id="user-delete-{{ userList.id }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Confirmation Delete!</h3>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure to delete <strong>{{ userList.username }}</strong> ?
+                        </div>
+                        <div class="modal-footer">
+                            <a href="{% url 'delete_user' userList.id %}" class="btn btn-danger">Delete Now</a>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+</table>
+
+{% endblock content %}
